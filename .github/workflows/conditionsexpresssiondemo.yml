@@ -15,16 +15,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: yes was provided at workflow input
-        if: github.events.inputs.failstep == 'yes'
+        if: github.event.inputs.failstep == 'yes'
         run: echo "Value passed by workflow_dispatch was YES to fail workflow"
 
       - name: no was provided at workflow input
-        if: github.events.inputs.failstep == 'no'
+        if: github.event.inputs.failstep == 'no'
         run: echo "Value passed by workflow_dispatch was NO to fail workflow"
 
       - name: Step that can be failed
         env: 
-          FAIL_STEP: ${{github.events.inputs.failstep == 'yes'}}
+          FAIL_STEP: ${{github.event.inputs.failstep == 'yes'}}
         run: |
           echo "This step runs whether the steps exists on 0 or 1"
           if [[ $FAIL_STEP == true]]
