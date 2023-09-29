@@ -1,14 +1,18 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: .NET
+name: Deploy To Azure App Service
 
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-
+    
+env:
+  AZURE_WEB_APP_PACKAGE_PATH: '.'
+  AZURE_WEB_APP_NAME: kapilkhubchandani
+  
 jobs:
   build:
 
@@ -22,7 +26,19 @@ jobs:
         dotnet-version: 7.0.x
     - name: Restore dependencies
       run: dotnet restore
+      
     - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet build --configuration Release
+
+    - name: Release
+      run:  dotnet build --configuration Release -o '${{env.AZURE_WEB_APP_PACKAGE_PATH}}/myapp'
+
+    - name: Deploy
+      uses: Azure/webapps-deploy@v2.2.11
+      with:
+       app-name: ${{env.AZURE_WEB_APP_NAME}}
+       slot-name: 'development'
+       publish-profile: ${{AZURE_WEBAPP_SECRET_ACTION_DEMO}}
+       package: '${{env.AZURE_WEB_APP_PACKAGE_PATH}}/myapp'
+
+    
