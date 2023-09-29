@@ -1,0 +1,52 @@
+name: Condition and Expression Demo
+on:
+  workflow_dispatch:
+    inputs:
+      failstep:
+        description: 'Fail step in job 1 (yes/no)'
+        default: 'no'
+        required: true
+jobs:
+  first-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check code if running on master branch
+        if: ${{github.ref == 'refs/head/master'}}
+        uses: actions/checkout@v2
+
+      - name: yes was provided at workflow input
+        if: github.events.inputs.failstep == 'yes'
+        run: echo "Value passed by workflow_dispatch was YES to fail workflow"
+
+      - name: no was provided at workflow input
+        if: github.events.inputs.failstep == 'no'
+        run: echo "Value passed by workflow_dispatch was NO to fail workflow"
+
+      - name: Step that can be failed
+        env: 
+          FAIL_STEP: ${{github.events.inputs.failstep == 'yes'}}
+        run: |
+          echo "This step runs whether the steps exists on 0 or 1"
+          if [[ $FAIL_STEP == true]]
+          then 
+            exit 1
+          fi
+
+      - name: Step in workflow
+        run: echo "Another step in workflow"
+
+      - name: This step only runs if there is a failure
+        if: failure()
+        run: echo "There has been a failure perhaps send a notification"
+
+      - name: step that always runs 
+        if: always()
+        run: echo "This step runs regardless of success and failure"
+
+  second-job:
+    runs-on: ubuntu-latest
+    needs: first-job
+    if: always()
+    steps:
+      - name: Simple step in job
+        run: echo "Simple step output"
