@@ -53,13 +53,13 @@ jobs:
          with:
            name: kapilkhubchandani
 
-      - name: Deploy To Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'kapilkhubchandani'
-          slot-name: 'development'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_SECRET_ACTION_DEMO }}
-          package: .
+       -  name: Deploy To Azure Web App
+          uses: azure/webapps-deploy@v2
+          with:
+            app-name: 'kapilkhubchandani'
+            slot-name: 'development'
+            publish-profile: ${{ secrets.AZURE_WEBAPP_SECRET_ACTION_DEMO }}
+            package: .
 
 
 
