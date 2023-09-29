@@ -8,6 +8,16 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  workflow_dispatch:
+    inputs:
+       name:
+         description: Enter the name
+         required: true
+         default: 'Github User'
+       deploy:
+         description: Deplloy after Code build (yes/no)
+         required: false
+         default: 'yes'
     
 env:
   AZURE_WEB_APP_PACKAGE_PATH: '.'
@@ -15,11 +25,16 @@ env:
   
 jobs:
   build:
-
+    name: Exploring github action
     runs-on: ubuntu-latest
 
     steps:
+    - run: echo "Name - ${{github.event.inputs.name}}"
+    - run: echo "Deploy Code - ${{github.event.inputs.deploy}}"  
+  
     - uses: actions/checkout@v3
+  
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
