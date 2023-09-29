@@ -30,8 +30,8 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release
 
-    - name: Release
-      run:  dotnet build -c Release -o ${{env.AZURE_WEB_APP_PACKAGE_PATH}}/myapp
+    - name: Publish
+      run:  dotnet publish -c Release -o ${{env.AZURE_WEB_APP_PACKAGE_PATH}}/myapp
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
